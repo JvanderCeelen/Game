@@ -62,6 +62,8 @@ HP: <span>50</span>
     game = {
         heroHP: $('.hero span').html(),
         monsterHP: $('.monster span').html(),
+        heroCritChance: '25',
+        monsterCritChance: '25',
 
         init: function() {
             game.attachHandlers();
@@ -88,7 +90,7 @@ HP: <span>50</span>
         },
 
         attack: function() {
-            var heroDamage = game.calculateDamage();
+            var heroDamage = game.calculateHeroDamage();
             var monsterDamage = game.calculateMonsterDamage();
 
             $('body').append('<p>You hit the monster for ' + heroDamage + ' damage.</p>');
@@ -110,12 +112,26 @@ HP: <span>50</span>
             }
         },
 
-        calculateDamage: function() {
-            return Math.floor(Math.random() * 6) + 4;
+        calculateHeroDamage: function() {
+            var multiplier = game.calculateCritMultiplier('hero');
+            return (Math.floor(Math.random() * 6) + 4) * multiplier;
         },
 
         calculateMonsterDamage: function() {
-            return Math.floor(Math.random() * 4) + 1;
+            var multiplier = game.calculateCritMultiplier('monster');
+            return (Math.floor(Math.random() * 4) + 1) * multiplier;
+        },
+
+        calculateCritMultiplier: function(person) {
+            var random = Math.floor(Math.random() * 100) + 1;
+
+            if (person == 'hero') {
+                critChance = game.heroCritChance;
+            } else if (person == 'monster') {
+                critChance = game.monsterCritChance;
+            }
+
+            return random <= critChance ? 1 : 2;
         },
 
         calculateMonsterHP: function(heroDamage) {
