@@ -19,7 +19,7 @@
         cursor: pointer;
     }
 
-    .hp {
+    .hero {
         position: absolute;
         top: 100px;
         right: 100px;
@@ -40,7 +40,7 @@
     You encounter a monster. What do you do?
 </p>
 
-<div class="hp">
+<div class="hero">
 HP:<span>100</span>
 </div>
 
@@ -60,7 +60,7 @@ HP: <span>50</span>
 
 <script>
     game = {
-        ownHP: $('.hp span').html(),
+        heroHP: $('.hero span').html(),
         monsterHP: $('.monster span').html(),
 
         init: function() {
@@ -73,10 +73,6 @@ HP: <span>50</span>
         },
 
         handleAttack: function(event) {
-            // var ownHP = $('.hp span').html();
-            // var monsterHP = $('.monster span').html();
-
-            console.log(game.ownHP, game.monsterHP);
             $('body').append('You attack the monster.');
             game.attackLoop();
         },
@@ -85,38 +81,55 @@ HP: <span>50</span>
             game.attack();
 
             setTimeout(function() {
-                if (game.monsterHP > 0){
+                if (game.monsterHP > 0 && game.heroHP > 0){
                     game.attackLoop();
                 }
             }, 1000);
         },
 
         attack: function() {
-            var ownDamage = game.calculateDamage();
+            var heroDamage = game.calculateDamage();
+            var monsterDamage = game.calculateMonsterDamage();
 
-            $('body').append('<p>You hit the monster for ' + ownDamage + ' damage.</p>');
+            $('body').append('<p>You hit the monster for ' + heroDamage + ' damage.</p>');
+            $('body').append('<p>The monster hits you for ' + monsterDamage + ' damage.</p>');
 
-            // calculate and echo monster HP
-            game.calculateMonsterHP(ownDamage);
+            // calculate and echo monster and hero HP
+            game.calculateMonsterHP(heroDamage);
+            game.calculateHeroHP(monsterDamage);
             $('.monster span').html(game.monsterHP);
+            $('.hero span').html(game.heroHP);
 
             // Echo monster death message
             if (game.monsterHP <= 0) {
                 $('body').append('<p class="result">The monster is dead. You killed it. It turned out to be a really friendly monster. Are you happy?</p>')
             }
+
+            if (game.heroHP <= 0) {
+                $('body').append('<p class="result">You have died. No exp for you. Are you sure this is the right game for you?</p>');
+            }
         },
 
         calculateDamage: function() {
-            var ownDamage = Math.floor(Math.random() * 6) + 4;
-
-            return ownDamage;
+            return Math.floor(Math.random() * 6) + 4;
         },
 
-        calculateMonsterHP: function(ownDamage) {
-            game.monsterHP -= ownDamage;
+        calculateMonsterDamage: function() {
+            return Math.floor(Math.random() * 4) + 1;
+        },
+
+        calculateMonsterHP: function(heroDamage) {
+            game.monsterHP -= heroDamage;
 
             if (game.monsterHP < 0)
                 game.monsterHP = 0;
+        },
+
+        calculateHeroHP: function(monsterDamage) {
+            game.heroHP -= monsterDamage;
+
+            if (game.heroHP < 0)
+                game.heroHP = 0;
         },
 
         handleFlee: function() {
