@@ -34,6 +34,10 @@
     .result {
         color: red;
     }
+
+    .crit span {
+        color: red;
+    }
 </style>
 
 <p>
@@ -41,7 +45,7 @@
 </p>
 
 <div class="hero">
-HP:<span>100</span>
+HP: <span>100</span>
 </div>
 
 <div class="monster">
@@ -62,8 +66,8 @@ HP: <span>50</span>
     game = {
         heroHP: $('.hero span').html(),
         monsterHP: $('.monster span').html(),
-        heroCritChance: '25',
-        monsterCritChance: '25',
+        heroCritChance: 15,
+        monsterCritChance: 15,
 
         init: function() {
             game.attachHandlers();
@@ -92,13 +96,23 @@ HP: <span>50</span>
         attack: function() {
             var heroDamage = game.calculateHeroDamage();
             var monsterDamage = game.calculateMonsterDamage();
+            var heroHitMessage = '<p>You hit the monster for ' + heroDamage['damage'] + ' damage.</p>';
+            var monsterHitMessage = '<p>The monster hits you for ' + monsterDamage['damage'] + ' damage.</p>';
 
-            $('body').append('<p>You hit the monster for ' + heroDamage + ' damage.</p>');
-            $('body').append('<p>The monster hits you for ' + monsterDamage + ' damage.</p>');
+            if (heroDamage['crit'] > 1) {
+                heroHitMessage = '<p class="crit"><span>CRIT!</span> Your hit devestates the monster. ' + heroDamage['damage'] + ' damage.</p>'
+            }
+
+            if (monsterDamage['crit'] > 1) {
+                monsterHitMessage = '<p class="crit"><span>CRIT!</span> The monster hit devestates you. ' + monsterDamage['damage'] + ' damage.</p>'
+            }
+
+            $('body').append(heroHitMessage);
+            $('body').append(monsterHitMessage);
 
             // calculate and echo monster and hero HP
-            game.calculateMonsterHP(heroDamage);
-            game.calculateHeroHP(monsterDamage);
+            game.calculateMonsterHP(heroDamage['damage']);
+            game.calculateHeroHP(monsterDamage['damage']);
             $('.monster span').html(game.monsterHP);
             $('.hero span').html(game.heroHP);
 
@@ -114,12 +128,18 @@ HP: <span>50</span>
 
         calculateHeroDamage: function() {
             var multiplier = game.calculateCritMultiplier('hero');
-            return (Math.floor(Math.random() * 6) + 4) * multiplier;
+            return {
+                damage: (Math.floor(Math.random() * 6) + 4) * multiplier,
+                crit: multiplier,
+            };
         },
 
         calculateMonsterDamage: function() {
             var multiplier = game.calculateCritMultiplier('monster');
-            return (Math.floor(Math.random() * 4) + 1) * multiplier;
+            return {
+                damage: (Math.floor(Math.random() * 4) + 1) * multiplier,
+                crit: multiplier,
+            }
         },
 
         calculateCritMultiplier: function(person) {
@@ -131,7 +151,7 @@ HP: <span>50</span>
                 critChance = game.monsterCritChance;
             }
 
-            return random <= critChance ? 1 : 2;
+            return random <= critChance ? 2 : 1;
         },
 
         calculateMonsterHP: function(heroDamage) {
