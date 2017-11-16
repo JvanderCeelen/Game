@@ -3,43 +3,11 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <!-- <link rel="stylesheet/less" href="style.less"> -->
-    <!-- <script src="../less/dist/less.js" type="text/javascript"></script> -->
-    <!-- <script src="../jquery/jquery-2.2.2.min.js"></script> -->
+    <link rel="stylesheet/less" href="source/less/style.less">
+    <script async type="text/javascript" src="source/js/less.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
-<style>
-    body {
-        position: relative;
-    }
-
-    .option {
-        display: block;
-        cursor: pointer;
-    }
-
-    .hero {
-        position: absolute;
-        top: 100px;
-        right: 100px;
-    }
-
-    .monster {
-        position: absolute;
-        top: 200px;
-        right: 100px;
-    }
-
-    .result {
-        color: red;
-    }
-
-    .crit span {
-        color: red;
-    }
-</style>
-
 <p>
     You encounter a monster. What do you do?
 </p>
@@ -52,15 +20,11 @@ HP: <span>100</span>
 HP: <span>50</span>
 </div>
 
-<div>
-    <span data-option="attack" class="option">Attack</span>
-    <span data-option="flee" class="option">Flee</span>
-    <span data-option="something" class="option">Something else</span>
+<div class="console-window">
+
 </div>
 
-<p class="response">
-
-</p>
+<input id="console-input" type="text" />
 
 <script>
     game = {
@@ -74,12 +38,35 @@ HP: <span>50</span>
         },
 
         attachHandlers: function() {
-            $('[data-option="attack"]').click(game.handleAttack);
-            $('[data-option="flee"]').click(game.handleFlee);
+            $('#console-input').change(game.handleInput);
         },
 
-        handleAttack: function(event) {
-            $('body').append('You attack the monster.');
+        handleInput: function() {
+            var input = $('#console-input').val();
+
+            switch (input) {
+                case 'attack':
+                    game.handleAttack();
+                    break;
+                case 'flee':
+                    game.handleFlee();
+                    break;
+                default:
+                    game.printToConsole('Excuse me?');
+                    break;
+            }
+        },
+
+        printToConsole: function(message) {
+            $('.console-window').append('<p>' + message + '</p>');
+
+            $('.console-window').scrollTop(
+                $('.console-window p:last-child').position().top
+            );
+        },
+
+        handleAttack: function() {
+            game.printToConsole('You attack the monster.');
             game.attackLoop();
         },
 
@@ -96,19 +83,19 @@ HP: <span>50</span>
         attack: function() {
             var heroDamage = game.calculateHeroDamage();
             var monsterDamage = game.calculateMonsterDamage();
-            var heroHitMessage = '<p>You hit the monster for ' + heroDamage['damage'] + ' damage.</p>';
-            var monsterHitMessage = '<p>The monster hits you for ' + monsterDamage['damage'] + ' damage.</p>';
+            var heroHitMessage = 'You hit the monster for ' + heroDamage['damage'] + ' damage.';
+            var monsterHitMessage = 'The monster hits you for ' + monsterDamage['damage'] + ' damage.';
 
             if (heroDamage['crit'] > 1) {
-                heroHitMessage = '<p class="crit"><span>CRIT!</span> Your hit devestates the monster. ' + heroDamage['damage'] + ' damage.</p>'
+                heroHitMessage = '<p class="crit"><span>CRIT!</span> Your hit devestates the monster. ' + heroDamage['damage'] + ' damage.'
             }
 
             if (monsterDamage['crit'] > 1) {
-                monsterHitMessage = '<p class="crit"><span>CRIT!</span> The monster hit devestates you. ' + monsterDamage['damage'] + ' damage.</p>'
+                monsterHitMessage = '<p class="crit"><span>CRIT!</span> The monster hit devestates you. ' + monsterDamage['damage'] + ' damage.'
             }
 
-            $('body').append(heroHitMessage);
-            $('body').append(monsterHitMessage);
+            game.printToConsole(heroHitMessage);
+            game.printToConsole(monsterHitMessage);
 
             // calculate and echo monster and hero HP
             game.calculateMonsterHP(heroDamage['damage']);
@@ -118,11 +105,11 @@ HP: <span>50</span>
 
             // Echo monster death message
             if (game.monsterHP <= 0) {
-                $('body').append('<p class="result">The monster is dead. You killed it. It turned out to be a really friendly monster. Are you happy?</p>')
+                game.printToConsole('<p class="result">The monster is dead. You killed it. It turned out to be a really friendly monster. Are you happy?')
             }
 
             if (game.heroHP <= 0) {
-                $('body').append('<p class="result">You have died. No exp for you. Are you sure this is the right game for you?</p>');
+                gamme.printToConsole('<p class="result">You have died. No exp for you. Are you sure this is the right game for you?');
             }
         },
 
@@ -169,8 +156,8 @@ HP: <span>50</span>
         },
 
         handleFlee: function() {
-            $('body').append('<p>Oh c\'mon. REALLY?');
-        }
+            game.printToConsole('Oh c\'mon. REALLY?');
+        },
     }
 
     game.init();
