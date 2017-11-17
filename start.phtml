@@ -38,7 +38,12 @@ HP: <span>50</span>
         },
 
         attachHandlers: function() {
-            $('#console-input').change(game.handleInput);
+            $('#console-input').on('keyup', function(event) {
+                if (event.keyCode == 13) {
+                    game.handleInput();
+                    $(event.target).val('');
+                }
+            });
         },
 
         handleInput: function() {
@@ -80,28 +85,42 @@ HP: <span>50</span>
             }, 1000);
         },
 
+        hit: function(person) {
+            var dodge = 0;
+
+            if (person == 'hero') {
+                dodge = players.hero.dodge;
+            } else if (person == 'monster') {
+                dodge = monsters.kobold.dodge;
+            }
+
+            var number = game.generateRandomNumber();
+            console.log(number);
+            return number <= dodge ? false : true;;
+        },
+
         attack: function() {
-            var heroDamage = game.calculateHeroDamage();
-            var monsterDamage = game.calculateMonsterDamage();
-            var heroHitMessage = 'You hit the monster for ' + heroDamage['damage'] + ' damage.';
-            var monsterHitMessage = 'The monster hits you for ' + monsterDamage['damage'] + ' damage.';
-
-            if (heroDamage['crit'] > 1) {
-                heroHitMessage = '<p class="crit"><span>CRIT!</span> Your hit devestates the monster. ' + heroDamage['damage'] + ' damage.'
+            if (game.hit('monster')) {
+                var heroDamage = game.calculateHeroDamage();
+                var heroHitMessage = 'You <em>' + (heroDamage['crit'] > 1 ? 'CRIT' : 'hit') + '</em> the monster for ' + heroDamage['damage'] + ' damage.';
+                game.calculateMonsterHP(heroDamage['damage']);
+                $('.monster span').html(game.monsterHP);
+                game.printToConsole(heroHitMessage);
+            } else {
+                var heroHitMessage = 'Your attack misses!'
+                game.printToConsole(heroHitMessage);
             }
 
-            if (monsterDamage['crit'] > 1) {
-                monsterHitMessage = '<p class="crit"><span>CRIT!</span> The monster hit devestates you. ' + monsterDamage['damage'] + ' damage.'
+            if (game.hit('hero')) {
+                var monsterDamage = game.calculateMonsterDamage();
+                var monsterHitMessage = 'The monster <em>' + (monsterDamage['crit'] > 1 ? 'CRITS' : 'hits') + '</em> you for ' + monsterDamage['damage'] + ' damage.';
+                game.calculateHeroHP(monsterDamage['damage']);
+                $('.hero span').html(game.heroHP);
+                game.printToConsole(monsterHitMessage);
+            } else {
+                var monsterHitMessage = 'The monster attack misses!'
+                game.printToConsole(monsterHitMessage);
             }
-
-            game.printToConsole(heroHitMessage);
-            game.printToConsole(monsterHitMessage);
-
-            // calculate and echo monster and hero HP
-            game.calculateMonsterHP(heroDamage['damage']);
-            game.calculateHeroHP(monsterDamage['damage']);
-            $('.monster span').html(game.monsterHP);
-            $('.hero span').html(game.heroHP);
 
             // Echo monster death message
             if (game.monsterHP <= 0) {
@@ -130,7 +149,7 @@ HP: <span>50</span>
         },
 
         calculateCritMultiplier: function(person) {
-            var random = Math.floor(Math.random() * 100) + 1;
+            var random = game.generateRandomNumber();
 
             if (person == 'hero') {
                 critChance = game.heroCritChance;
@@ -155,14 +174,30 @@ HP: <span>50</span>
                 game.heroHP = 0;
         },
 
+        generateRandomNumber: function(range) {
+            var range = range || 100;
+            return Math.floor(Math.random() * range) + 1;
+        },
+
         handleFlee: function() {
             game.printToConsole('Oh c\'mon. REALLY?');
         },
     }
-
     game.init();
+
+    players = {
+
+        hero: {
+            'dodge': 5
+        },
+    }
+
+    monsters = {
+
+        kobold: {
+            'dodge': 5
+        },
+    }
 </script>
-
-
 </body>
 </html>
