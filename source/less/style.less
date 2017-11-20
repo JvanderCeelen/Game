@@ -15,16 +15,42 @@ body {
     cursor: pointer;
 }
 
-.hero {
+.healthbar {
+    display: flex;
     position: absolute;
-    top: 100px;
-    right: 100px;
+    top: 0;
+    border-radius: 2px;
+    overflow: hidden;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.healthbar-outer {
+    width: 100px;
+    height: 20px;
+    margin-left: 6px;
+    background-color: #cbcbcb;
+
+    transition: width .2s ease;
+}
+
+.healthbar-inner {
+    width: 100px;
+    height: 100%;
+    color: #fff;
+    background-color: #00aa00;
+    text-indent: 6px;
+    font-weight: bold;
+
+    transition: width .2s ease;
+}
+
+.hero {
+    right: 50px;
 }
 
 .monster {
-    position: absolute;
-    top: 200px;
-    right: 100px;
+    right: 250px;
 }
 
 .result {

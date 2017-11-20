@@ -12,12 +12,22 @@
     You encounter a monster. What do you do?
 </p>
 
-<div class="hero">
-HP: <span>100</span>
+<div class="healthbar hero">
+    Hero:
+    <div class="healthbar-outer">
+        <div class="healthbar-inner" data-hp="100">
+            100
+        </div>
+    </div>
 </div>
 
-<div class="monster">
-HP: <span>50</span>
+<div class="healthbar monster">
+    Monster:
+    <div class="healthbar-outer">
+        <div class="healthbar-inner" data-hp="50">
+            50
+        </div>
+    </div>
 </div>
 
 <div class="console-window">
@@ -28,8 +38,8 @@ HP: <span>50</span>
 
 <script>
     game = {
-        heroHP: $('.hero span').html(),
-        monsterHP: $('.monster span').html(),
+        heroHP: $('.hero .healthbar-inner').html(),
+        monsterHP: $('.monster .healthbar-inner').html(),
         heroCritChance: 15,
         monsterCritChance: 15,
 
@@ -95,7 +105,6 @@ HP: <span>50</span>
             }
 
             var number = game.generateRandomNumber();
-            console.log(number);
             return number <= dodge ? false : true;;
         },
 
@@ -104,7 +113,6 @@ HP: <span>50</span>
                 var heroDamage = game.calculateHeroDamage();
                 var heroHitMessage = 'You <em>' + (heroDamage['crit'] > 1 ? 'CRIT' : 'hit') + '</em> the monster for ' + heroDamage['damage'] + ' damage.';
                 game.calculateMonsterHP(heroDamage['damage']);
-                $('.monster span').html(game.monsterHP);
                 game.printToConsole(heroHitMessage);
             } else {
                 var heroHitMessage = 'Your attack misses!'
@@ -115,7 +123,6 @@ HP: <span>50</span>
                 var monsterDamage = game.calculateMonsterDamage();
                 var monsterHitMessage = 'The monster <em>' + (monsterDamage['crit'] > 1 ? 'CRITS' : 'hits') + '</em> you for ' + monsterDamage['damage'] + ' damage.';
                 game.calculateHeroHP(monsterDamage['damage']);
-                $('.hero span').html(game.heroHP);
                 game.printToConsole(monsterHitMessage);
             } else {
                 var monsterHitMessage = 'The monster attack misses!'
@@ -165,6 +172,11 @@ HP: <span>50</span>
 
             if (game.monsterHP < 0)
                 game.monsterHP = 0;
+
+            var HPbar = '.monster .healthbar-inner';
+            var totalHP = $(HPbar).data('hp');
+
+            $(HPbar).html(game.monsterHP).width($(HPbar).width() - (heroDamage / totalHP) * 100);
         },
 
         calculateHeroHP: function(monsterDamage) {
@@ -172,6 +184,11 @@ HP: <span>50</span>
 
             if (game.heroHP < 0)
                 game.heroHP = 0;
+
+            var HPbar = '.hero .healthbar-inner';
+            var totalHP = $(HPbar).data('hp');
+
+            $(HPbar).html(game.heroHP).width($(HPbar).width() - ((monsterDamage / totalHP) * 100));
         },
 
         generateRandomNumber: function(range) {
