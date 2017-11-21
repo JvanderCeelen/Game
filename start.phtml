@@ -22,10 +22,8 @@
 </div>
 
 <div class="healthbar monster">
-    Monster:
     <div class="healthbar-outer">
-        <div class="healthbar-inner" data-hp="50">
-            50
+        <div class="healthbar-inner" data-hp="">
         </div>
     </div>
 </div>
@@ -39,7 +37,7 @@
 <script>
     game = {
         heroHP: $('.hero .healthbar-inner').html(),
-        monsterHP: $('.monster .healthbar-inner').html(),
+        monsterHP: 0,
         heroCritChance: 15,
         monsterCritChance: 15,
 
@@ -57,14 +55,18 @@
         },
 
         handleInput: function() {
-            var input = $('#console-input').val();
+            var target = $('#console-input').val();
 
-            switch (input) {
-                case 'attack':
-                    game.handleAttack();
+            switch (target) {
+                case (target.match(/(attack )\w/) || {}).input:
+                    target = target.replace('attack ', '');
+                    game.searchTarget(target);
                     break;
                 case 'flee':
                     game.handleFlee();
+                    break;
+                case 'look':
+                    game.handleLook();
                     break;
                 default:
                     game.printToConsole('Excuse me?');
@@ -80,38 +82,36 @@
             );
         },
 
-        handleAttack: function() {
-            game.printToConsole('You attack the monster.');
-            game.attackLoop();
+        searchTarget: function(target) {
+            for (var monster in monsters) {
+                if (monster == target) {
+                    game.handleAttack(monsters[monster]);
+                }
+            }
+
+            // game.printToConsole('No-one by the name of ' + monster + ' is around!');
         },
 
-        attackLoop: function() {
-            game.attack();
+        handleAttack: function(monster) {
+            game.printToConsole('You attack the ' + monster.name + '.');
+            game.setMonsterInfo(monster);
+            game.attackLoop(monster);
+        },
+
+        attackLoop: function(monster) {
+            game.attack(monster);
 
             setTimeout(function() {
                 if (game.monsterHP > 0 && game.heroHP > 0){
-                    game.attackLoop();
+                    game.attackLoop(monster);
                 }
             }, 1000);
         },
 
-        hit: function(person) {
-            var dodge = 0;
-
-            if (person == 'hero') {
-                dodge = players.hero.dodge;
-            } else if (person == 'monster') {
-                dodge = monsters.kobold.dodge;
-            }
-
-            var number = game.generateRandomNumber();
-            return number <= dodge ? false : true;;
-        },
-
-        attack: function() {
-            if (game.hit('monster')) {
+        attack: function(monster) {
+            if (game.hit(monster)) {
                 var heroDamage = game.calculateHeroDamage();
-                var heroHitMessage = 'You <em>' + (heroDamage['crit'] > 1 ? 'CRIT' : 'hit') + '</em> the monster for ' + heroDamage['damage'] + ' damage.';
+                var heroHitMessage = 'You <em>' + (heroDamage['crit'] > 1 ? 'CRIT' : 'hit') + '</em> the ' + monster.name + ' for ' + heroDamage['damage'] + ' damage.';
                 game.calculateMonsterHP(heroDamage['damage']);
                 game.printToConsole(heroHitMessage);
             } else {
@@ -121,7 +121,7 @@
 
             if (game.hit('hero')) {
                 var monsterDamage = game.calculateMonsterDamage();
-                var monsterHitMessage = 'The monster <em>' + (monsterDamage['crit'] > 1 ? 'CRITS' : 'hits') + '</em> you for ' + monsterDamage['damage'] + ' damage.';
+                var monsterHitMessage = 'The ' + monster.name + ' <em>' + (monsterDamage['crit'] > 1 ? 'CRITS' : 'hits') + '</em> you for ' + monsterDamage['damage'] + ' damage.';
                 game.calculateHeroHP(monsterDamage['damage']);
                 game.printToConsole(monsterHitMessage);
             } else {
@@ -131,12 +131,25 @@
 
             // Echo monster death message
             if (game.monsterHP <= 0) {
-                game.printToConsole('<p class="result">The monster is dead. You killed it. It turned out to be a really friendly monster. Are you happy?')
+                game.printToConsole('<p class="result">The ' + monster.name + ' is dead. You killed it. It turned out to be a really friendly monster. Are you happy?')
             }
 
             if (game.heroHP <= 0) {
                 gamme.printToConsole('<p class="result">You have died. No exp for you. Are you sure this is the right game for you?');
             }
+        },
+
+        hit: function(person) {
+            var dodge = 0;
+
+            if (person == 'hero') {
+                dodge = players.hero.dodge;
+            } else {
+                dodge = person.dodge;
+            }
+
+            var number = game.generateRandomNumber();
+            return number <= dodge ? false : true;;
         },
 
         calculateHeroDamage: function() {
@@ -173,6 +186,7 @@
             if (game.monsterHP < 0)
                 game.monsterHP = 0;
 
+
             var HPbar = '.monster .healthbar-inner';
             var totalHP = $(HPbar).data('hp');
 
@@ -191,9 +205,19 @@
             $(HPbar).html(game.heroHP).width($(HPbar).width() - ((monsterDamage / totalHP) * 100));
         },
 
+        setMonsterInfo: function(monster) {
+            game.monsterHP = monster.hp;
+            $('.healthbar.monster').prepend(monster.name + ':');
+            $('.monster .healthbar-inner').html(monster.hp).data('hp', monster.hp);;
+        },
+
         generateRandomNumber: function(range) {
             var range = range || 100;
             return Math.floor(Math.random() * range) + 1;
+        },
+
+        handleLook: function() {
+            game.printToConsole('');
         },
 
         handleFlee: function() {
@@ -212,7 +236,17 @@
     monsters = {
 
         kobold: {
-            'dodge': 5
+            'name' : 'kobold',
+            'hp'   : 50,
+            'dodge': 5,
+            'exp'  : 100,
+        },
+
+        orc: {
+            'name' : 'orc',
+            'hp'   : 100,
+            'dodge': 5,
+            'exp'  : 200,
         },
     }
 </script>
