@@ -1,5 +1,9 @@
 body {
     position: relative;
+
+    * {
+        box-sizing: border-box;
+    }
 }
 
 .console-window {
@@ -59,4 +63,29 @@ body {
 
 .crit span {
     color: red;
+}
+
+.form-container {
+    width: 600px;
+    margin: 0 auto;
+
+    .form-element-group {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    fieldset {
+        padding: 20px;
+    }
+
+    label {
+        display: block;
+        width: 100px;
+        height: 40px;
+        line-height: 40px;
+    }
+
+    input {
+        height: 40px;
+    }
 }
