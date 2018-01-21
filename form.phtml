@@ -8,26 +8,65 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
-    <div class="form-container">
-        <form action="" method="get">
-            <fieldset>
-                <legend>Character Creation</legend>
-                <div class="form-element-group">
-                    <label for="name">Name</label>
-                    <input type="text" autofocus="autofocus" required="required">
-                </div>
-                <div class="form-element-group">
-                    <label for="class">Class</label>
-                    <select required="required">
-                        <option>Mage</option>
-                        <option>Priest</option>
-                        <option>Ranger</option>
-                        <option>Rogue</option>
-                        <option>Warrior</option>
-                    </select>
-                </div>
-            </fieldset>
-        </form>
+    <div class="content-wrapper">
+        <div class="form-container">
+            <form action="" method="get">
+                <fieldset>
+                    <legend>Character Creation</legend>
+                    <div class="form-element-group">
+                        <label for="name">Name</label>
+                        <input type="text" autofocus="autofocus" required="required">
+                    </div>
+                    <div class="form-element-group">
+                        <label for="class">Class</label>
+                        <select required="required">
+                            <option>Mage</option>
+                            <option>Priest</option>
+                            <option>Ranger</option>
+                            <option>Rogue</option>
+                            <option>Warrior</option>
+                        </select>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Character attributes</legend>
+                    <div class="form-element-group">
+                        <label>Strength</label>
+                        <input class="attribute-number" data-str="" type="text" required="required" readonly="readonly">
+                        <button>Reroll</button>
+                    </div>
+                    <div class="form-element-group">
+                        <label>Dexterity</label>
+                        <input class="attribute-number" data-dex="" type="text" required="required" readonly="readonly">
+                        <button>Reroll</button>
+                    </div>
+                    <div class="form-element-group">
+                        <label>Constitution</label>
+                        <input class="attribute-number" data-con="" type="text" required="required" readonly="readonly">
+                        <button>Reroll</button>
+                    </div>
+                    <div class="form-element-group">
+                        <label>Intelligence</label>
+                        <input class="attribute-number" data-int="" type="text" required="required" readonly="readonly">
+                        <button>Reroll</button>
+                    </div>
+                    <div class="form-element-group">
+                        <label>Wisdom</label>
+                        <input class="attribute-number" data-wis="" type="text" required="required" readonly="readonly">
+                        <button>Reroll</button>
+                    </div>
+                    <div class="form-element-group">
+                        <label>Charisma</label>
+                        <input class="attribute-number" data-cha="" type="text" required="required" readonly="readonly">
+                        <button>Reroll</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
     </div>
 </body>
+
+<script>
+
+</script>
 </html>

@@ -72,20 +72,29 @@ body {
     .form-element-group {
         display: flex;
         margin-bottom: 10px;
+
+        button {
+            margin-left: 20px;
+        }
     }
 
     fieldset {
+        margin: 20px 0;
         padding: 20px;
     }
 
     label {
         display: block;
-        width: 100px;
+        width: 140px;
         height: 40px;
         line-height: 40px;
     }
 
     input {
         height: 40px;
+
+        &.attribute-number {
+            width: 100px;
+        }
     }
 }
