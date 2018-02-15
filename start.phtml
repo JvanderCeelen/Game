@@ -74,6 +74,7 @@
 
         kobold: {
             'crit'  : 15,
+            'desc'  : 'This is a kobold. It does not look particularly fearsome.',
             'dodge' : 5,
             'exp'   : 100,
             'hp'    : 50,
@@ -83,6 +84,7 @@
 
         orc: {
             'crit'  : 15,
+            'desc'  : 'This is a bloodthirsty orc. Better watch it.',
             'dodge' : 5,
             'exp'   : 200,
             'hp'    : 100,
@@ -98,7 +100,7 @@
 
         init: function() {
             game.attachHandlers();
-            game.updateCharacterInfo('hero');
+            game.updateCharacterInfo(game.hero);
         },
 
         attachHandlers: function() {
@@ -114,15 +116,28 @@
             var target = $('#console-input').val();
 
             switch (target) {
+                // attack
                 case (target.match(/(attack )\w/) || {}).input:
                     target = target.replace('attack ', '');
-                    game.searchTarget(target);
+                    game.getAttackTarget(target);
                     break;
+                // inspect
+                case (target.match(/(inspect )\w/) || {}).input:
+                    target = target.replace('inspect ', '');
+                    game.inspectCharact(target);
+                    break;
+                // flee
                 case 'flee':
                     game.handleFlee();
                     break;
-                case 'look':
-                    game.handleLook();
+                // look
+                case (target.match(/(look )\w/) || {}).input:
+                    target = target.replace('look ', '');
+                    game.handleLook(target);
+                    break;
+                case (target.match(/(target )\w/) || {}).input:
+                    target = target.replace('target ', '');
+                    game.targetCharacter(target);
                     break;
                 default:
                     game.printToConsole('Excuse me?');
@@ -138,14 +153,43 @@
             );
         },
 
-        searchTarget: function(target) {
+        inspectCharact: function(target) {
+            for (var monster in monsters) {
+                if (monster == target) {
+                    game.printToConsole(
+                        'This is a(n) level <strong>' + monsters[monster].level + ' ' + monsters[monster].name + '</strong>. ' +
+                        'It has <strong>' + monsters[monster].hp + '</strong> hitpoints.'
+                    );
+
+                    return;
+                }
+            }
+            game.printToConsole('No-one by the name of ' + monster + ' can be targeted.');
+        },
+
+        targetCharacter: function(target) {
+            for (var monster in monsters) {
+                if (monster == target) {
+                    game.updateCharacterInfo(monsters[monster]);
+                    return;
+                }
+            }
+        },
+
+        /**
+         * Loops over the monsters object and checks if the attacked target is
+         * one of those monsters. If so, the handle attack function is called. If
+         * not a message is printed that there's no such monster.
+         * @return undefined
+         */
+        getAttackTarget: function(target) {
             for (var monster in monsters) {
                 if (monster == target) {
                     game.handleAttack(monsters[monster]);
+                    return;
                 }
             }
-
-            // game.printToConsole('No-one by the name of ' + monster + ' is around!');
+            game.printToConsole('No-one by the name of ' + monster + ' is around!');
         },
 
         handleAttack: function(monster) {
@@ -237,7 +281,7 @@
         },
 
         updateCharacterInfo: function(target) {
-            if (target === 'hero') {
+            if (target === game.hero) {
                 $('.character-name', '.info-hero').text(players.hero.name + ':');
                 $('.healthbar-hero .healthbar-inner').text(players.hero.hp).data('hp', players.hero.hp);;
                 $('.hero-level span').text(players.hero.level);
@@ -255,8 +299,18 @@
             return Math.floor(Math.random() * range) + 1;
         },
 
-        handleLook: function() {
-            game.printToConsole('You look around you.');
+        handleLook: function(target) {
+            if (target === undefined) {
+                game.printToConsole('You look around you.');
+                return;
+            }
+
+            for (var monster in monsters) {
+                if (monster == target) {
+                    game.printToConsole(monsters[monster].desc);
+                    return;
+                }
+            }
         },
 
         handleFlee: function() {
