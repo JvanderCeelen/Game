@@ -7,7 +7,7 @@
     <script async type="text/javascript" src="source/js/less.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
-<body>
+<body class="character-creation">
     <div class="content-wrapper">
         <div class="form-container">
             <form action="" method="get">
@@ -19,7 +19,8 @@
                     </div>
                     <div class="form-element-group">
                         <label for="class">Class</label>
-                        <select required="required">
+                        <select id="charClass" required="required">
+                            <option selected="selected">- class -</option>
                             <option>Mage</option>
                             <option>Priest</option>
                             <option>Ranger</option>
@@ -67,6 +68,50 @@
 </body>
 
 <script>
+
+classes = {
+
+    mage: {
+        int: 1,
+        wis: 1,
+        cha: 1,
+        con: 0,
+        str: 0,
+        dex: -1,
+    },
+}
+
+attributes = {
+
+    init: function() {
+        attributes.attachHandlers();
+    },
+
+    attachHandlers: function() {
+        $('#charClass').change(attributes.calculateAttributeValues);
+    },
+
+    calculateAttributeValues: function() {
+        console.log('here');
+        var classVal = ($('#charClass').val()).toLowerCase();
+
+        $('.attribute-number').each(function(index, element) {
+            $(element).val(attributes.calculateAttributeValue(classVal));
+        });
+    },
+
+    calculateAttributeValue: function(classVal) {
+        for (var charClass in classes) {
+            if (charClass == classVal) {
+                for (var modifier in charClass) {
+                    console.log(Math.floor(Math.random() * 10) + 11 + modifier);
+                }
+            }
+        }
+    },
+};
+
+attributes.init();
 
 </script>
 </html>
