@@ -51,10 +51,12 @@
     </header>
 
     <div class="console-window">
+        <div class="console-window__content">
 
+        </div>
     </div>
 
-    <input id="console-input" type="text" />
+    <input id="console-input" type="text" autofocus />
 </body>
 
 <script>
@@ -146,10 +148,10 @@
         },
 
         printToConsole: function(message) {
-            $('.console-window').append('<p>' + message + '</p>');
+            $('.console-window__content').append('<p>' + message + '</p>');
 
             $('.console-window').scrollTop(
-                $('.console-window p:last-child').position().top
+                $('.console-window__content p:last-child').position().top
             );
         },
 
@@ -212,7 +214,13 @@
                 var damage = game.calculateDamage(monster);
                 var hitMessage = 'You <em>' + (damage['crit'] > 1 ? 'CRIT' : 'hit') + '</em> the ' + monster.name + ' for ' + damage['damage'] + ' damage.';
                 game.calculateHP(damage['damage'], monster);
-                monster.hp > 0 ? game.printToConsole(hitMessage) : game.handleDeath(monster);
+
+                if (monster.hp <= 0) {
+                    game.handleDeath(monster);
+                    return;
+                }
+
+                game.printToConsole(hitMessage)
             } else {
                 var hitMessage = 'Your attack misses!'
                 game.printToConsole(hitMessage);
@@ -222,7 +230,13 @@
                 var damage = game.calculateDamage(game.hero);
                 var hitMessage = 'The ' + monster.name + ' <em>' + (damage['crit'] > 1 ? 'CRITS' : 'hits') + '</em> you for ' + damage['damage'] + ' damage.';
                 game.calculateHP(damage['damage'], game.hero);
-                players.hero.hp > 0 ? game.printToConsole(hitMessage) : game.handleDeath(game.hero);
+
+                if (players.hero.hp <= 0) {
+                    game.handleDeath(game.hero);
+                    return;
+                }
+
+                game.printToConsole(hitMessage)
             } else {
                 var hitMessage = 'The monster attack misses!'
                 game.printToConsole(hitMessage);
