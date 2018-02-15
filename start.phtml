@@ -65,7 +65,7 @@
         hero: {
             'crit'  : 15,
             'dodge' : 5,
-            'exp'   : 50,
+            'exp'   : 0,
             'hp'    : 100,
             'level' : 1,
             'name'  : 'Dani',
@@ -96,13 +96,11 @@
     }
 
     game = {
-        heroCritChance: 15,
-        monsterCritChance: 15,
         hero: players.hero,
 
         init: function() {
             game.attachHandlers();
-            game.updateCharacterInfo(game.hero);
+            game.setCharacterInfo(game.hero);
         },
 
         attachHandlers: function() {
@@ -172,7 +170,7 @@
         targetCharacter: function(target) {
             for (var monster in monsters) {
                 if (monster == target) {
-                    game.updateCharacterInfo(monsters[monster]);
+                    game.setCharacterInfo(monsters[monster]);
                     return;
                 }
             }
@@ -196,7 +194,7 @@
 
         handleAttack: function(monster) {
             game.printToConsole('You attack the ' + monster.name + '.');
-            game.updateCharacterInfo(monster);
+            game.setCharacterInfo(monster);
             game.attackLoop(monster);
         },
 
@@ -211,7 +209,7 @@
 
         attack: function(monster) {
             if (game.hit(monster)) {
-                var damage = game.calculateDamage(monster);
+                var damage = game.calculateDamageTo(game.hero);
                 var hitMessage = 'You <em>' + (damage['crit'] > 1 ? 'CRIT' : 'hit') + '</em> the ' + monster.name + ' for ' + damage['damage'] + ' damage.';
                 game.calculateHP(damage['damage'], monster);
 
@@ -227,7 +225,7 @@
             }
 
             if (game.hit(game.hero)) {
-                var damage = game.calculateDamage(game.hero);
+                var damage = game.calculateDamageTo(monster);
                 var hitMessage = 'The ' + monster.name + ' <em>' + (damage['crit'] > 1 ? 'CRITS' : 'hits') + '</em> you for ' + damage['damage'] + ' damage.';
                 game.calculateHP(damage['damage'], game.hero);
 
@@ -256,7 +254,7 @@
             return number <= dodge ? false : true;
         },
 
-        calculateDamage: function(target) {
+        calculateDamageTo: function(target) {
             var multiplier = game.calculateCritMultiplier(target);
             return {
                 damage: (Math.floor(Math.random() * 6) + 4) * multiplier,
@@ -264,17 +262,9 @@
             };
         },
 
-        calculateCritMultiplier: function(person) {
+        calculateCritMultiplier: function(target) {
             var random = game.generateRandomNumber();
-            var critChance;
-
-            if (person == game.hero) {
-                critChance = game.heroCritChance;
-            } else if (person == 'monster') {
-                critChance = game.monsterCritChance;
-            }
-
-            return random <= critChance ? 2 : 1;
+            return random <= target.crit ? 2 : 1;
         },
 
         calculateHP: function(damage, target) {
@@ -294,18 +284,27 @@
             $(HPbar).html(target.hp).width($(HPbar).width() - (damage / totalHP) * 100);
         },
 
-        updateCharacterInfo: function(target) {
+        setCharacterInfo: function(target) {
+            if (typeof(target) !== 'object') return;
+
             if (target === game.hero) {
                 $('.character-name', '.info-hero').text(players.hero.name + ':');
                 $('.healthbar-hero .healthbar-inner').text(players.hero.hp).data('hp', players.hero.hp);;
                 $('.hero-level span').text(players.hero.level);
-                $('.levelbar-inner', '.info-hero ').width(players.hero.exp);
+                game.updateExp();
             } else {
                 $('.info-monster').css('opacity', 1);
                 $('.character-name', '.info-monster').text(target.name + ':');
                 $('.healthbar-monster .healthbar-inner').text(target.hp).data('hp', target.hp);;
                 $('.monster-level span').text(target.level);
             }
+        },
+
+        updateExp: function() {
+            var threshold = 1000;
+            var outerBarWidth = $('.exp-bar-outer').width();
+            var amount = (players.hero.exp / threshold) * outerBarWidth;
+            $('.exp-bar-inner').width(amount);
         },
 
         generateRandomNumber: function(range) {
@@ -335,6 +334,8 @@
             if (target == game.hero) {
                 game.printToConsole('<p class="result">You have died. No exp for you. Are you sure this is the right game for you?');
             } else {
+                players.hero.exp += target.exp;
+                game.setCharacterInfo(game.hero);
                 game.printToConsole('<p class="result">The ' + target.name + ' is dead. You killed it. It turned out to be a really friendly monster. Are you happy?')
             }
         }
