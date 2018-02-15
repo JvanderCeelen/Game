@@ -7,59 +7,87 @@
     <script async type="text/javascript" src="source/js/less.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
-<body>
-<p>
-    You encounter a monster. What do you do?
-</p>
+<body class="game">
+    <header>
+        <p>
+            You encounter a monster. What do you do?
+        </p>
 
-<div class="healthbar hero">
-    <div class="healthbar-outer">
-        <div class="healthbar-inner" data-hp="">
+        <div class="character-info-wrapper">
+            <div class="character-info info-hero">
+                <span class="character-name"></span>
+                <div class="character-stats">
+                    <div class="healthbar healthbar-hero">
+                        <div class="healthbar-outer">
+                            <div class="healthbar-inner" data-hp="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level hero-level">
+                        <span></span>
+                    </div>
+                    <div class="exp-bar-outer">
+                        <div class="exp-bar-inner">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="character-info info-monster">
+                <span class="character-name"></span>
+                <div class="character-stats">
+                    <div class="healthbar healthbar-monster">
+                        <div class="healthbar-outer">
+                            <div class="healthbar-inner" data-hp="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level monster-level">
+                        <span></span>
+                    </div>
+                </div>
+            </div>
         </div>
+    </header>
+
+    <div class="console-window">
+
     </div>
-</div>
 
-<div class="healthbar monster">
-    <div class="healthbar-outer">
-        <div class="healthbar-inner" data-hp="">
-        </div>
-    </div>
-</div>
-
-<div class="console-window">
-
-</div>
-
-<input id="console-input" type="text" />
+    <input id="console-input" type="text" />
+</body>
 
 <script>
     players = {
 
         hero: {
-            'name' : 'Dani',
-            'hp'   : 100,
-            'dodge': 5,
-            'exp'  : 0,
-            'crit' : 15,
+            'crit'  : 15,
+            'dodge' : 5,
+            'exp'   : 50,
+            'hp'    : 100,
+            'level' : 1,
+            'name'  : 'Dani',
         },
     }
 
     monsters = {
 
         kobold: {
-            'name' : 'kobold',
-            'hp'   : 50,
-            'dodge': 5,
-            'exp'  : 100,
-            'crit' : 15,
+            'crit'  : 15,
+            'dodge' : 5,
+            'exp'   : 100,
+            'hp'    : 50,
+            'level' : 1,
+            'name'  : 'kobold',
         },
 
         orc: {
-            'name' : 'orc',
-            'hp'   : 100,
-            'dodge': 5,
-            'exp'  : 200,
-            'crit' : 15,
+            'crit'  : 15,
+            'dodge' : 5,
+            'exp'   : 200,
+            'hp'    : 100,
+            'level' : 1,
+            'name'  : 'orc',
         },
     }
 
@@ -70,7 +98,7 @@
 
         init: function() {
             game.attachHandlers();
-            game.setPlayerInfo();
+            game.updateCharacterInfo('hero');
         },
 
         attachHandlers: function() {
@@ -122,7 +150,7 @@
 
         handleAttack: function(monster) {
             game.printToConsole('You attack the ' + monster.name + '.');
-            game.setMonsterInfo(monster);
+            game.updateCharacterInfo(monster);
             game.attackLoop(monster);
         },
 
@@ -198,9 +226,9 @@
                 target.hp = 0;
 
             if (target == game.hero) {
-                var HPbar = '.hero .healthbar-inner';
+                var HPbar = '.healthbar-hero .healthbar-inner';
             } else {
-                var HPbar = '.monster .healthbar-inner';
+                var HPbar = '.healthbar-monster .healthbar-inner';
             }
 
             var totalHP = $(HPbar).data('hp');
@@ -208,14 +236,18 @@
             $(HPbar).html(target.hp).width($(HPbar).width() - (damage / totalHP) * 100);
         },
 
-        setMonsterInfo: function(monster) {
-            $('.healthbar.monster').prepend(monster.name + ':');
-            $('.monster .healthbar-inner').html(monster.hp).data('hp', monster.hp);;
-        },
-
-        setPlayerInfo: function() {
-            $('.healthbar.hero').prepend(players.hero.name + ':');
-            $('.hero .healthbar-inner').html(players.hero.hp).data('hp', players.hero.hp);;
+        updateCharacterInfo: function(target) {
+            if (target === 'hero') {
+                $('.character-name', '.info-hero').text(players.hero.name + ':');
+                $('.healthbar-hero .healthbar-inner').text(players.hero.hp).data('hp', players.hero.hp);;
+                $('.hero-level span').text(players.hero.level);
+                $('.levelbar-inner', '.info-hero ').width(players.hero.exp);
+            } else {
+                $('.info-monster').css('opacity', 1);
+                $('.character-name', '.info-monster').text(target.name + ':');
+                $('.healthbar-monster .healthbar-inner').text(target.hp).data('hp', target.hp);;
+                $('.monster-level span').text(target.level);
+            }
         },
 
         generateRandomNumber: function(range) {
@@ -224,7 +256,7 @@
         },
 
         handleLook: function() {
-            game.printToConsole('');
+            game.printToConsole('You look around you.');
         },
 
         handleFlee: function() {
@@ -242,5 +274,4 @@
 
 game.init();
 </script>
-</body>
 </html>

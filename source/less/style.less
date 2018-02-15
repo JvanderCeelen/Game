@@ -1,100 +1,172 @@
+@grey: #cbcbcb;
+
 body {
     position: relative;
 
     * {
         box-sizing: border-box;
     }
-}
 
-.console-window {
-    width: 100%;
-    height: 500px;
-    padding: 20px;
-    border: 2px solid #cbcbcb;
-    overflow-y: scroll;
-}
+    &.game {
 
-.option {
-    display: block;
-    cursor: pointer;
-}
+        p {
+            margin: 0;
+        }
 
-.healthbar {
-    display: flex;
-    position: absolute;
-    top: 0;
-    border-radius: 2px;
-    overflow: hidden;
-    font-size: 14px;
-    line-height: 20px;
-}
+        .console-window {
+            width: 100%;
+            height: 500px;
+            padding: 20px;
+            border: 2px solid @grey;
+            overflow-y: scroll;
 
-.healthbar-outer {
-    width: 100px;
-    height: 20px;
-    margin-left: 6px;
-    background-color: #cbcbcb;
+            p {
+                margin-top: 6px;
+            }
+        }
 
-    transition: width .2s ease;
-}
+        header {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 14px;
+        }
 
-.healthbar-inner {
-    width: 100px;
-    height: 100%;
-    color: #fff;
-    background-color: #00aa00;
-    text-indent: 6px;
-    font-weight: bold;
+        .character-info-wrapper {
+            display: flex;
+            margin-left: auto;
+        }
 
-    transition: width .2s ease;
-}
+        .character-info {
+            display: flex;
+            width: 200px;
+            transition: opacity .2s ease-in-out;
 
-.hero {
-    right: 50px;
-}
+            ~ .character-info {
+                margin-left: 20px;
+            }
 
-.monster {
-    right: 250px;
-}
+            &.info-monster {
+                opacity: 0;
+            }
+        }
 
-.result {
-    color: red;
-}
+        .character-stats {
+            display: flex;
+            flex-wrap: wrap;
+            margin-left: 6px;
+        }
 
-.crit span {
-    color: red;
-}
+        .healthbar {
+            display: flex;
+            border-radius: 2px;
+            overflow: hidden;
+            line-height: 20px;
+        }
 
-.form-container {
-    width: 600px;
-    margin: 0 auto;
+        .healthbar-outer {
+            width: 100px;
+            height: 20px;
+            background-color: @grey;
 
-    .form-element-group {
-        display: flex;
-        margin-bottom: 10px;
+            transition: width .2s ease;
+        }
 
-        button {
-            margin-left: 20px;
+        .healthbar-inner {
+            width: 100px;
+            height: 100%;
+            color: #fff;
+            background-color: #00aa00;
+            text-indent: 6px;
+            font-weight: bold;
+
+            transition: width .2s ease;
+        }
+
+        .level {
+            margin-left: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+
+            span {
+                font-weight: bold;
+                line-height: 21px;
+                color: #fff;
+            }
+
+            &.hero-level {
+                background-color: #00aa00;
+            }
+
+            &.monster-level {
+                background-color: #aa0000;
+            }
+        }
+
+        .exp-bar-outer {
+            width: 100%;
+            height: 8px;
+            margin-top: 4px;
+            padding: 2px;
+            border: 1px solid @grey;
+        }
+
+        .exp-bar-inner {
+            width: 0;
+            height: 100%;
+            background-color: gold;
+        }
+
+        .result {
+            color: red;
+        }
+
+        .crit span {
+            color: red;
         }
     }
 
-    fieldset {
-        margin: 20px 0;
-        padding: 20px;
-    }
+    &.character-creation {
 
-    label {
-        display: block;
-        width: 140px;
-        height: 40px;
-        line-height: 40px;
-    }
+        .option {
+            display: block;
+            cursor: pointer;
+        }
 
-    input {
-        height: 40px;
+        .form-container {
+            width: 600px;
+            margin: 0 auto;
 
-        &.attribute-number {
-            width: 100px;
+            .form-element-group {
+                display: flex;
+                margin-bottom: 10px;
+
+                button {
+                    margin-left: 20px;
+                }
+            }
+
+            fieldset {
+                margin: 20px 0;
+                padding: 20px;
+            }
+
+            label {
+                display: block;
+                width: 140px;
+                height: 40px;
+                line-height: 40px;
+            }
+
+            input {
+                height: 40px;
+
+                &.attribute-number {
+                    width: 100px;
+                }
+            }
         }
     }
 }
