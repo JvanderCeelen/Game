@@ -1,0 +1,63 @@
+<!doctype html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet/less" href="source/less/style.less">
+    <link rel="stylesheet/less" href="source/less/map.less">
+    <script async type="text/javascript" src="source/js/less.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body class="map">
+    <main>
+        <table>
+            <tbody>
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
+
+<script>
+    var map = {
+
+        init: function() {
+            map.addTr();
+        },
+
+        attachHandlers: function() {
+
+        },
+
+        addTr: function() {
+            var tBody = $('body.map').find('tbody');
+
+            for (i = 0; i < 10; i++) {
+                tBody.append('<tr></tr>');
+            }
+
+            map.addTd();
+        },
+
+        addTd: function() {
+            var selector = $('body.map tbody tr');
+
+            $(selector).each(function(index, tr) {
+
+                for (i = 0; i < 10; i++) {
+                    $(tr).append('<td></td>');
+                }
+            });
+
+            map.setActiveTile();
+        },
+
+        setActiveTile: function() {
+            table = $('body.map').find('tbody');
+
+            table.find('tr:nth-child(5)').find('td:nth-child(5)').addClass('active');
+        },
+    }
+
+    map.init();
+</script>

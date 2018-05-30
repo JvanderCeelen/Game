@@ -93,7 +93,7 @@ attributes = {
 
         for (var attribute in attributeModifiers) {
             var modifier = attributeModifiers[attribute];
-            var val = Math.floor(Math.random() * 10) + 10 + modifier;
+            var val = Math.ceil(Math.random() * 10) + 10 + modifier;
 
             $('.attribute-number').each(function(index, input) {
                 if ($(input).data('class') == attribute) {
