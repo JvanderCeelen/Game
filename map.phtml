@@ -21,6 +21,109 @@
 </html>
 
 <script>
+    var tiles = {
+        '0,0' : ['orc', 'kobold', 'kobold'],
+        '0,1' : ['orc', 'kobold', 'kobold'],
+        '0,2' : ['orc', 'kobold', 'kobold'],
+        '0,3' : ['orc', 'kobold', 'kobold'],
+        '0,4' : ['orc', 'kobold', 'kobold'],
+        '0,5' : ['orc', 'kobold', 'kobold'],
+        '0,6' : ['orc', 'kobold', 'kobold'],
+        '0,7' : ['orc', 'kobold', 'kobold'],
+        '0,8' : ['orc', 'kobold', 'kobold'],
+        '0,9' : ['orc', 'kobold', 'kobold'],
+        '1,0' : ['orc', 'kobold', 'kobold'],
+        '1,1' : ['orc', 'kobold', 'kobold'],
+        '1,2' : ['orc', 'kobold', 'kobold'],
+        '1,3' : ['orc', 'kobold', 'kobold'],
+        '1,4' : ['orc', 'kobold', 'kobold'],
+        '1,5' : ['orc', 'kobold', 'kobold'],
+        '1,6' : ['orc', 'kobold', 'kobold'],
+        '1,7' : ['orc', 'kobold', 'kobold'],
+        '1,8' : ['orc', 'kobold', 'kobold'],
+        '1,9' : ['orc', 'kobold', 'kobold'],
+        '2,0' : ['orc', 'kobold', 'kobold'],
+        '2,1' : ['orc', 'kobold', 'kobold'],
+        '2,2' : ['orc', 'kobold', 'kobold'],
+        '2,3' : ['orc', 'kobold', 'kobold'],
+        '2,4' : ['orc', 'kobold', 'kobold'],
+        '2,5' : ['orc', 'kobold', 'kobold'],
+        '2,6' : ['orc', 'kobold', 'kobold'],
+        '2,7' : ['orc', 'kobold', 'kobold'],
+        '2,8' : ['orc', 'kobold', 'kobold'],
+        '2,9' : ['orc', 'kobold', 'kobold'],
+        '3,0' : ['orc', 'kobold', 'kobold'],
+        '3,1' : ['orc', 'kobold', 'kobold'],
+        '3,2' : ['orc', 'kobold', 'kobold'],
+        '3,3' : ['orc', 'kobold', 'kobold'],
+        '3,4' : ['orc', 'kobold', 'kobold'],
+        '3,5' : ['orc', 'kobold', 'kobold'],
+        '3,6' : ['orc', 'kobold', 'kobold'],
+        '3,7' : ['orc', 'kobold', 'kobold'],
+        '3,8' : ['orc', 'kobold', 'kobold'],
+        '3,9' : ['orc', 'kobold', 'kobold'],
+        '4,0' : ['orc', 'kobold', 'kobold'],
+        '4,1' : ['orc', 'kobold', 'kobold'],
+        '4,2' : ['orc', 'kobold', 'kobold'],
+        '4,3' : ['orc', 'kobold', 'kobold'],
+        '4,4' : ['orc', 'kobold', 'kobold'],
+        '4,5' : ['orc', 'kobold', 'kobold'],
+        '4,6' : ['orc', 'kobold', 'kobold'],
+        '4,7' : ['orc', 'kobold', 'kobold'],
+        '4,8' : ['orc', 'kobold', 'kobold'],
+        '4,9' : ['orc', 'kobold', 'kobold'],
+        '5,0' : ['orc', 'kobold', 'kobold'],
+        '5,1' : ['orc', 'kobold', 'kobold'],
+        '5,2' : ['orc', 'kobold', 'kobold'],
+        '5,3' : ['orc', 'kobold', 'kobold'],
+        '5,4' : ['orc', 'kobold', 'kobold'],
+        '5,5' : ['orc', 'kobold', 'kobold'],
+        '5,6' : ['orc', 'kobold', 'kobold'],
+        '5,7' : ['orc', 'kobold', 'kobold'],
+        '5,8' : ['orc', 'kobold', 'kobold'],
+        '5,9' : ['orc', 'kobold', 'kobold'],
+        '6,0' : ['orc', 'kobold', 'kobold'],
+        '6,1' : ['orc', 'kobold', 'kobold'],
+        '6,2' : ['orc', 'kobold', 'kobold'],
+        '6,3' : ['orc', 'kobold', 'kobold'],
+        '6,4' : ['orc', 'kobold', 'kobold'],
+        '6,5' : ['orc', 'kobold', 'kobold'],
+        '6,6' : ['orc', 'kobold', 'kobold'],
+        '6,7' : ['orc', 'kobold', 'kobold'],
+        '6,8' : ['orc', 'kobold', 'kobold'],
+        '6,9' : ['orc', 'kobold', 'kobold'],
+        '7,0' : ['orc', 'kobold', 'kobold'],
+        '7,1' : ['orc', 'kobold', 'kobold'],
+        '7,2' : ['orc', 'kobold', 'kobold'],
+        '7,3' : ['orc', 'kobold', 'kobold'],
+        '7,4' : ['orc', 'kobold', 'kobold'],
+        '7,5' : ['orc', 'kobold', 'kobold'],
+        '7,6' : ['orc', 'kobold', 'kobold'],
+        '7,7' : ['orc', 'kobold', 'kobold'],
+        '7,8' : ['orc', 'kobold', 'kobold'],
+        '7,9' : ['orc', 'kobold', 'kobold'],
+        '8,0' : ['orc', 'kobold', 'kobold'],
+        '8,1' : ['orc', 'kobold', 'kobold'],
+        '8,2' : ['orc', 'kobold', 'kobold'],
+        '8,3' : ['orc', 'kobold', 'kobold'],
+        '8,4' : ['orc', 'kobold', 'kobold'],
+        '8,5' : ['orc', 'kobold', 'kobold'],
+        '8,6' : ['orc', 'kobold', 'kobold'],
+        '8,7' : ['orc', 'kobold', 'kobold'],
+        '8,8' : ['orc', 'kobold', 'kobold'],
+        '8,9' : ['orc', 'kobold', 'kobold'],
+        '9,0' : ['orc', 'kobold', 'kobold'],
+        '9,1' : ['orc', 'kobold', 'kobold'],
+        '9,2' : ['orc', 'kobold', 'kobold'],
+        '9,3' : ['orc', 'kobold', 'kobold'],
+        '9,4' : ['orc', 'kobold', 'kobold'],
+        '9,5' : ['orc', 'kobold', 'kobold'],
+        '9,6' : ['orc', 'kobold', 'kobold'],
+        '9,7' : ['orc', 'kobold', 'kobold'],
+        '9,8' : ['orc', 'kobold', 'kobold'],
+        '9,9' : ['orc', 'kobold', 'kobold'],
+    }
+
     var map = {
 
         init: function() {
@@ -96,6 +199,7 @@
                 return;
             } else {
                 map.handleMove(direction);
+                map.getTileContent(map.getActiveTileLocation());
             }
         },
 
@@ -153,6 +257,12 @@
             });
 
             return location;
+        },
+
+        getTileContent: function(location) {
+            console.log('You encounter: ' + tiles[location.toString()][0] + ', '
+                                          + tiles[location.toString()][1] + ', '
+                                          + tiles[location.toString()][1]);
         }
     };
 
