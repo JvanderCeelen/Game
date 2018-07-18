@@ -12,8 +12,10 @@
     <main>
         <table>
             <tbody>
+                <!-- content set via js -->
             </tbody>
         </table>
+        <input id="console-input" type="text">
     </main>
 </body>
 </html>
@@ -23,10 +25,16 @@
 
         init: function() {
             map.addTr();
+            map.attachHandlers();
         },
 
         attachHandlers: function() {
-
+            $('#console-input').on('keyup', function(event) {
+                if (event.keyCode == 13) {
+                    map.handleInput(event);
+                    $(event.target).val('');
+                }
+            });
         },
 
         addTr: function() {
@@ -52,12 +60,72 @@
             map.setActiveTile();
         },
 
-        setActiveTile: function() {
-            table = $('body.map').find('tbody');
+        setActiveTile: function(location) {
+            var table = $('body.map').find('tbody');
+            var location = location || [5,5];
 
-            table.find('tr:nth-child(5)').find('td:nth-child(5)').addClass('active');
+            table.find('tr:nth-child(' + location[0] + ')')
+                 .find('td:nth-child(' + location[1] + ')')
+                 .addClass('active');
         },
-    }
+
+        handleInput: function(event) {
+            var direction = $('#console-input').val();
+
+            if (! (direction == 'n' || 's' || 'e' || 'w')) {
+                console.log('geen windrichting');
+                return;
+            } else {
+                map.handleMove(direction);
+            }
+        },
+
+        handleMove: function(direction) {
+            var activeTile = $('body.map').find('td.active');
+
+            switch (direction) {
+                case 'n':
+                    var location = map.getCoordinates();
+                    location[0] = location[0] - 1;
+                    map.setActiveTile(location);
+                    $(activeTile).removeClass('active');
+                    break;
+                case 's':
+                    var location = map.getCoordinates();
+                    location[0] = location[0] + 1;
+                    map.setActiveTile(location);
+                    $(activeTile).removeClass('active');
+                    break;
+                case 'w':
+                    var location = map.getCoordinates();
+                    location[1] = location[1] - 1;
+                    map.setActiveTile(location);
+                    $(activeTile).removeClass('active');
+                    break;
+                case 'e':
+                    var location = map.getCoordinates();
+                    location[1] = location[1] + 1;
+                    map.setActiveTile(location);
+                    $(activeTile).removeClass('active');
+                    break;
+            }
+        },
+
+        getCoordinates: function() {
+            var location = [];
+
+            $('body.map tbody tr').each(function(rowIndex, row) {
+
+                $(row).find('td').each(function(cellIndex, cell) {
+                    if ($(cell).hasClass('active')) {
+                        location = [rowIndex + 1, cellIndex + 1];
+                    }
+                });
+            });
+
+            return location;
+        }
+    };
 
     map.init();
 </script>

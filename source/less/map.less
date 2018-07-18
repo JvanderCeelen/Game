@@ -1,3 +1,5 @@
+@black: lighten(black, 30%);
+
 body.map {
     position: absolute;
     top: 0;
@@ -21,11 +23,19 @@ body.map {
 
     td {
         height: 50px;
-        border: 1px solid black;
+        border: 1px solid @black;
         box-sizing: border-box;
 
         &.active {
             background-color: green;
         }
+    }
+
+    #console-input {
+        height: 32px;
+        margin-top: 20px;
+        padding: 6px 10px;
+        border: 1px solid @black;
+        border-radius: 4px;
     }
 }
