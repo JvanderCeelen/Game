@@ -37,6 +37,10 @@
             });
         },
 
+        /**
+         * Js solution of making a bunch of tr's
+         * @return undefined
+         */
         addTr: function() {
             var tBody = $('body.map').find('tbody');
 
@@ -47,6 +51,10 @@
             map.addTd();
         },
 
+        /**
+         * Js solution of making a bunch of td's for each tr`
+         * @return undefined
+         */
         addTd: function() {
             var selector = $('body.map tbody tr');
 
@@ -60,6 +68,12 @@
             map.setActiveTile();
         },
 
+        /**
+         * Set active tile on the map. If no location is given the default is
+         * 5,5.
+         * @var location array
+         * @return undefined
+         */
         setActiveTile: function(location) {
             var table = $('body.map').find('tbody');
             var location = location || [5,5];
@@ -69,6 +83,11 @@
                  .addClass('active');
         },
 
+        /**
+         * Handles the input of the map
+         * @var event obj
+         * @return undefined
+         */
         handleInput: function(event) {
             var direction = $('#console-input').val();
 
@@ -80,30 +99,36 @@
             }
         },
 
+        /**
+         * Handles the movement on the map, i.e. change the active tile location.
+         * Only reacts to cardinal directions.
+         * @var direction string
+         * @return undefined
+         */
         handleMove: function(direction) {
             var activeTile = $('body.map').find('td.active');
 
             switch (direction) {
                 case 'n':
-                    var location = map.getCoordinates();
+                    var location = map.getActiveTileLocation();
                     location[0] = location[0] - 1;
                     map.setActiveTile(location);
                     $(activeTile).removeClass('active');
                     break;
                 case 's':
-                    var location = map.getCoordinates();
+                    var location = map.getActiveTileLocation();
                     location[0] = location[0] + 1;
                     map.setActiveTile(location);
                     $(activeTile).removeClass('active');
                     break;
                 case 'w':
-                    var location = map.getCoordinates();
+                    var location = map.getActiveTileLocation();
                     location[1] = location[1] - 1;
                     map.setActiveTile(location);
                     $(activeTile).removeClass('active');
                     break;
                 case 'e':
-                    var location = map.getCoordinates();
+                    var location = map.getActiveTileLocation();
                     location[1] = location[1] + 1;
                     map.setActiveTile(location);
                     $(activeTile).removeClass('active');
@@ -111,7 +136,11 @@
             }
         },
 
-        getCoordinates: function() {
+        /**
+         * Gets the coordinates of the active map tile.
+         * @return location array
+         */
+        getActiveTileLocation: function() {
             var location = [];
 
             $('body.map tbody tr').each(function(rowIndex, row) {
